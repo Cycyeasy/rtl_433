@@ -17,6 +17,10 @@ def sanitize(text):
 
 
 def rtl_433_probe():
+<<<<<<< HEAD
+=======
+    statsd_host = "localhost"
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
     statsd_host = "127.0.0.1"
     statsd_port = 8125
     statsd_prefix = 'rtlsdr'
@@ -36,8 +40,16 @@ def rtl_433_probe():
             if "channel" in data:
                 label += ".CH" + str(data["channel"])
 
+<<<<<<< HEAD
             if "battery_ok" in data:
                 statsd.gauge(label + '.battery', data["battery_ok"])
+=======
+            if "battery" in data:
+                if data["battery"] == "OK":
+                    statsd.gauge(label + '.battery', 1)
+                else:
+                    statsd.gauge(label + '.battery', 0)
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
 
             if "humidity" in data:
                 statsd.gauge(label + '.humidity', data["humidity"])

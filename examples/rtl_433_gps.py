@@ -8,6 +8,10 @@
 from __future__ import print_function
 
 import socket
+<<<<<<< HEAD
+=======
+import time
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
 import json
 import gps
 import threading
@@ -102,6 +106,11 @@ if __name__ == '__main__':
     gpsp = GpsPoller()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+<<<<<<< HEAD
+=======
+    # allow multiple sockets to use the same PORT number
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
     sock.bind((UDP_IP, UDP_PORT))
 
     try:

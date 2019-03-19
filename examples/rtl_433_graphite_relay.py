@@ -48,6 +48,11 @@ class GraphiteUdpClient(object):
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+<<<<<<< HEAD
+=======
+# allow multiple sockets to use the same PORT number
+sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
 sock.bind((UDP_IP, UDP_PORT))
 
 
@@ -84,8 +89,16 @@ def rtl_433_probe():
                 label += ".ID" + str(data["id"])
             path = GRAPHITE_PREFIX + label
 
+<<<<<<< HEAD
             if "battery_ok" in data:
                 graphite.push(path + '.battery', data["battery_ok"], now)
+=======
+            if "battery" in data:
+                if data["battery"] == "OK":
+                    graphite.push(path + '.battery', 1, now)
+                else:
+                    graphite.push(path + '.battery', 0, now)
+>>>>>>> 9ae2db7e (Add bridge/relay example scripts)
 
             if "humidity" in data:
                 graphite.push(path + '.humidity', data["humidity"], now)
