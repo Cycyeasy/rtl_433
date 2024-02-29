@@ -247,7 +247,13 @@ jobs:
     - name: "Configure with Mingw-w64"
       run: cmake -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchain-gcc-mingw-w64-${{ matrix.arch }}.cmake -DENABLE_RTLSDR=OFF -B build
     - name: "Build with Mingw-w64"
+<<<<<<< HEAD
       run: cmake --build build
+=======
+      run: |
+        cmake -DCMAKE_TOOLCHAIN_FILE=cmake/Toolchain-gcc-mingw-w64-${{ matrix.arch }}.cmake -DENABLE_RTLSDR=OFF -B build
+        cmake --build build
+>>>>>>> 8d1541bd (build: Update Github Actions)
     - name: "Sysroot Build with Mingw-w64"
       run: ./.ci/scripts/do_sysroot.sh
     - name: "Upload Release Asset"
@@ -382,8 +388,43 @@ jobs:
       shell: bash
       working-directory: ${{ runner.workspace }}
       run: |
+<<<<<<< HEAD
         mv rtl_433-win-msvc-x64.zip $ZIP_FILE
         gh release upload ${{ needs.release_job.outputs.release_version }} $ZIP_FILE
+=======
+        mv rtl_433-win-msvc-x64.zip rtl_433-win-msvc-x64-${{ needs.release_job.outputs.release_version }}.zip
+        gh release upload ${{ needs.release_job.outputs.release_version }} rtl_433-win-msvc-x64-${{ needs.release_job.outputs.release_version }}.zip
+
+  build_linux_job:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    name: Build with CMake on ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install SDR
+      run: |
+        sudo apt-get update -q
+        sudo apt-get install -y librtlsdr-dev libsoapysdr-dev libssl-dev
+    - name: Get latest CMake and Ninja
+      uses: lukka/get-cmake@latest
+    - name: Run CMake+Ninja
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: dummy
+        configurePresetCmdString: "[`-B`, `${{ runner.workspace }}/b/ninja`, `-GNinja`, `-DENABLE_RTLSDR=ON`, `-DENABLE_SOAPYSDR=ON`, `-DENABLE_OPENSSL=ON`]"
+        buildPreset: dummy
+        buildPresetCmdString: "[`--build`, `${{ runner.workspace }}/b/ninja`, `--config`, `Release`]"
+    - name: Run CMake+UnixMakefiles
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: dummy
+        configurePresetCmdString: "[`-B`, `${{ runner.workspace }}/b/unixmakefiles`, `-GUnix Makefiles`, `-DENABLE_RTLSDR=ON`, `-DENABLE_SOAPYSDR=ON`, `-DENABLE_OPENSSL=ON`]"
+        buildPreset: dummy
+        buildPresetCmdString: "[`--build`, `${{ runner.workspace }}/b/unixmakefiles`, `--config`, `Release`]"
+>>>>>>> 8d1541bd (build: Update Github Actions)
 
   build_arch_job:
     if: ${{ false }}  # disable for now
